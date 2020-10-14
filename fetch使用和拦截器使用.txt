@@ -1,0 +1,102 @@
+
+书写：
+/**
+ * Requests a URL, returning a promise.
+ *
+ * @param  {string} url       The URL we want to request
+ * @param  {object} [options] The options we want to pass to "fetch"
+ * @return {object}           An object containing either "data" or "err"
+ */
+export  default function request(sUrl, options) {
+  const url = Config.seg_api + sUrl;
+  const defaultOptions = {
+    mode: 'cors'
+  };
+  const newOptions = { ...defaultOptions, ...options };
+  if (newOptions.method !== 'GET') {
+    let params = {
+      client: 0,
+      validate: 0,
+      authtoken:localStorage.getItem('token')
+    }
+    let allParams = Object.assign(params,newOptions.body)
+    newOptions.headers = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+      ...newOptions.headers,
+    };
+    newOptions.body = JSON.stringify(allParams);
+  }
+
+  return fetch(url, newOptions)
+          .then(gotoLogin)
+          .then(checkStatus)
+          .then(parseJSON)
+          .catch(err=>err)
+}
+
+
+
+function parseJSON(response) {
+  return response.json();
+}
+
+function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+  const error = new Error(response.statusText);
+  error.response = response;
+  throw error;
+}
+function gotoLogin(data) {
+  if(data.code===4000){
+    // window.location.href="http://zh.hzxc.gov.cn/login"
+  }
+  return data
+}
+
+
+
+
+使用：
+export function getLibraryPage(data){
+  return request(`/labelThesaurus/getByPage`,{
+    method: 'POST',
+    credentials: 'include',
+    body: {
+      ...data
+    }
+  })
+}
+export function selectAllType(){
+    return request(`/type/selectAllType`,{
+        method: 'GET',
+        credentials: 'include'
+    })
+}
+
+export function getType(typeName){
+    return request(`/type/getType?typeName=${typeName}`,{
+        method: 'GET',
+        credentials: 'include'
+    })
+}
+
+
+//https://segmentfault.com/a/1190000017742993?utm_source=tag-newest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
