@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+       div#outA{
+        width:400px; height:400px; background:#CDC9C9;position:relative;
+        }
+        div#outB{
+            height:200; background:#0000ff;top:100px;position:relative;
+        }
+        div#outC{
+            height:100px; background:#FFB90F;top:50px;position:relative;
+        }
+    </style>
+</head>
+<body>
+    <div id="outA">
+        <div id="outB">
+            <div id="outC">
+            </div> 
+        </div>
+    </div>
+</body>
+<script>
+ window.onload = function(){
+    var outA = document.getElementById("outA");  
+    var outB = document.getElementById("outB");  
+    var outC = document.getElementById("outC");  
+    outA.addEventListener('click',function(){alert("bubble1");},false);
+    outB.addEventListener('click',function(){alert("bubble2");},false);
+    outB.addEventListener('click',function(){alert("capture2");},true);    
+    outC.addEventListener('click',function(){alert("target");},true);
+    outA.addEventListener('click',function(){alert("capture1");},true);
+};
+//点击outC 会capture1  capture2 target bubble2  bubble1
+
+
+// 点击outB capture1--bubble2--capture2--bubble1  outB为事件触发处
+// divB正是事件触发处，而这时的事件触发顺序由事件的注册顺序决定。所以到了处于目标阶段，按顺序执行。bubble2--capture2
+</script>
+</html>
